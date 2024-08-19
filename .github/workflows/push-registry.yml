@@ -35,5 +35,5 @@ jobs:
 
       - name: Build and Push Container
         run: |-
-          docker build -t "${{ vars.GCP_REGISTRY_LOCATION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_REGISTRY_REPOSITORY_NAME }}:${{ github.sha }}" ./
-          docker push "${{ vars.GCP_REGISTRY_LOCATION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_REGISTRY_REPOSITORY_NAME }}:${{ github.sha }}"
+          docker build -t "${{ vars.GCP_REGISTRY_LOCATION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_REGISTRY_REPOSITORY_NAME }}/${{ vars.GCP_REGISTRY_IMAGE_NAME }}:${{ github.sha }}" ./
+          docker push "${{ vars.GCP_REGISTRY_LOCATION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_REGISTRY_REPOSITORY_NAME }}/${{ vars.GCP_REGISTRY_IMAGE_NAME }}:${{ github.sha }}"
