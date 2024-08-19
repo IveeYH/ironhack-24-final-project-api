@@ -1,14 +1,18 @@
 name: Push to Artifact Registry
 
 on:
-  push:
-    branches: [ "main" ]
+  workflow_dispatch:
+    environment:
+      description: 'Environment'
+      type: environment
+      required: true
+  
 
 env:
-  PROJECT_ID: env.GCP_PROJECT_ID
-  GAR_LOCATION: env.GCP_REGISTRY_LOCATION
-  SERVICE: env.GCP_ML_API_SERVICE_NAME
-  REGION: env.GCP_REGION_DEFAULT
+  PROJECT_ID: vars.GCP_PROJECT_ID
+  GAR_LOCATION: vars.GCP_REGISTRY_LOCATION
+  SERVICE: vars.GCP_ML_API_SERVICE_NAME
+  REGION: vars.GCP_REGION_DEFAULT
 
 jobs:
   deploy:
