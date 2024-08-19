@@ -24,22 +24,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Google Auth
-        id: google-auth
-        uses: 'google-github-actions/auth@v2'
-        with:
-          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
-
-      # BEGIN - Docker auth and build (NOTE: If you already have a container image, these Docker steps can be omitted)
-
       # Authenticate Docker to Google Cloud Artifact Registry
       - name: Docker Auth
         id: docker-auth
-        uses: 'docker/login-action@v1'
+        uses: 'docker/login-action@v3'
         with:
-          username: 'oauth2accesstoken'
-          password: '${{ steps.auth.outputs.access_token }}'
           registry: '${{ vars.GCP_REGISTRY_LOCATION }}-docker.pkg.dev'
+          username: _json_key
+          password: ${{ secrets.GCP_CREDENTIALS }}
 
       - name: Build and Push Container
         run: |-
