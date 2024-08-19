@@ -39,7 +39,7 @@ jobs:
         with:
           username: 'oauth2accesstoken'
           password: '${{ steps.auth.outputs.access_token }}'
-          registry: '${{ vars.GCP_REGISTRY_LOCATION }}'
+          registry: '${{ vars.GCP_REGISTRY_LOCATION }}-docker.pkg.dev'
 
       - name: Build and Push Container
         run: |-
