@@ -2,10 +2,11 @@ name: Push to Artifact Registry
 
 on:
   workflow_dispatch:
-    environment:
-      description: 'Environment'
-      type: environment
-      required: true
+    inputs:
+      environment:
+        description: 'Environment'
+        type: environment
+        required: true
   
 
 env:
