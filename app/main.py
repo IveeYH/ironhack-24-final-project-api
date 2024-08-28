@@ -24,7 +24,7 @@ class Protein(str, Enum):
 def test_api_connection():
     return {"version": "0.0.1-rc.0"}
 
-@app.post("/predict")
+@app.post("/predict/{protein_code}")
 def predict_small_molecule_protein_binding_affinity(protein_code: Protein, molecules: List[Molecule]) -> List[Molecule]:
     from app.smp_binding_affinity import model as smpba_model, datatypes
 
