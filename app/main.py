@@ -2,6 +2,7 @@ from enum import Enum
 from typing import List
 from fastapi import FastAPI
 from pydantic import BaseModel
+from app.external_services.smp_binding_affinity import SMPBindingAffinityModel as Model, Molecule as ModelMolecule, Protein as ModelProtein
 import os
 
 GCS_BUCKET_NAME = os.getenv("GCS_BUCKET_NAME")
@@ -26,12 +27,11 @@ def test_api_connection():
 
 @app.post("/predict/{protein_code}")
 def predict_small_molecule_protein_binding_affinity(protein_code: Protein, molecules: List[Molecule]) -> List[Molecule]:
-    from app.smp_binding_affinity import model as smpba_model, datatypes
 
-    model_molecules = [datatypes.Molecule(id=molecule.id, smile=molecule.smile) for molecule in molecules]
-    model_protein = datatypes.Protein(acronym=protein_code.value)
+    model_molecules = [ModelMolecule(id=molecule.id, smile=molecule.smile) for molecule in molecules]
+    model_protein = ModelProtein(acronym=protein_code.value)
 
-    model = smpba_model.SMPBindingAffinityModel(
+    model = Model(
         gcs_bucket_name=GCS_BUCKET_NAME,
         gcs_model_path=f"{GCS_MODEL_PATH}/{protein_code.value}_model.pt"
     )
@@ -42,5 +42,5 @@ def predict_small_molecule_protein_binding_affinity(protein_code: Protein, molec
     )
 
     return {
-        "data": [{"molecule": datatypes.Molecule(id=molecule.id, smile=molecule.smile), "protein": protein_code, "binding_affinity": molecule.binding_affinity} for molecule in predicted_molecules]
+        "data": [{"molecule": ModelMolecule(id=molecule.id, smile=molecule.smile), "protein": protein_code, "binding_affinity": molecule.binding_affinity} for molecule in predicted_molecules]
     }
