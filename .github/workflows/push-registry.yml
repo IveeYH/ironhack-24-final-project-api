@@ -16,7 +16,7 @@ jobs:
     environment: dev
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       # Authenticate Docker to Google Cloud Artifact Registry
       - name: Docker Auth
@@ -25,9 +25,28 @@ jobs:
         with:
           registry: '${{ vars.GCP_REGION_DEFAULT }}-docker.pkg.dev'
           username: _json_key_base64
-          password: ${{ secrets.GCP_ARTIFACT_SA_KEY }}
+          password: ${{ secrets.GCP_SA_KEY }}
 
       - name: Build and Push Container
         run: |-
           docker build -t "${{ vars.GCP_REGION_DEFAULT }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_REGISTRY_REPOSITORY_NAME }}/${{ vars.GCP_REGISTRY_IMAGE_NAME }}:${{ github.sha }}" ./
           docker push "${{ vars.GCP_REGION_DEFAULT }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_REGISTRY_REPOSITORY_NAME }}/${{ vars.GCP_REGISTRY_IMAGE_NAME }}:${{ github.sha }}"
+
+      # Decode the Base64 encoded GCP_SA_KEY
+      - name: Decode GCP_SA_KEY
+        id: decode-key
+        run: echo "${{ secrets.GCP_SA_KEY }}" | base64 --decode > /tmp/gcp-key.json
+
+      # Authenticate with Google Cloud to deploy to Cloud Run
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: /tmp/gcp-key.json
+
+      - name: Deploy to Cloud Run
+        run: |-
+          gcloud run deploy ${{ vars.GCP_CLOUD_RUN_SERVICE_NAME }} \
+            --image="${{ vars.GCP_REGION_DEFAULT }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_REGISTRY_REPOSITORY_NAME }}/${{ vars.GCP_REGISTRY_IMAGE_NAME }}:${{ github.sha }}" \
+            --region=${{ vars.GCP_REGION_DEFAULT }} \
+            --platform=managed \
+            --allow-unauthenticated
