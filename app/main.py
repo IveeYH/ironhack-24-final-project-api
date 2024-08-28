@@ -40,6 +40,11 @@ def predict_small_molecule_protein_binding_affinity(protein_code: Protein, molec
         molecules=model_molecules
     )
 
+    print(predicted_molecules)
+
+    print(predicted_molecules[0])
+    print(type(predicted_molecules[0]))
+
     final_molecules = []
     for molecule in predicted_molecules:
         final_molecules.append(Molecule(
