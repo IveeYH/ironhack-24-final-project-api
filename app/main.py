@@ -23,7 +23,7 @@ class Protein(str, Enum):
 
 @app.get("/test")
 def test_api_connection():
-    return {"project": "small-molecule-protein-binding-affinity"}
+    return {"version": "0.0.1-rc.0"}
 
 @app.post("/predict")
 def predict_small_molecule_protein_binding_affinity(protein_code: Protein, molecules: List[Molecule]) -> List[Molecule]:
