@@ -69,6 +69,7 @@ class GNNModel(nn.Module):
         return x
 
 setattr(__main__, 'GNNModel', GNNModel)
+setattr(__main__, 'CustomGNNLayer', CustomGNNLayer)
 
 class SMPBindingAffinityModel:
 
