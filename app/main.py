@@ -27,7 +27,6 @@ def test_api_connection():
 
 @app.post("/predict/{protein_code}")
 def predict_small_molecule_protein_binding_affinity(protein_code: Protein, molecules: List[Molecule]) -> List[Molecule]:
-
     model_molecules = [ModelMolecule(id=molecule.id, smile=molecule.smile) for molecule in molecules]
     model_protein = ModelProtein(acronym=protein_code.value)
 
