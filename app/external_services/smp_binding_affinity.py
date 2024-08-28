@@ -23,8 +23,8 @@ class Protein:
         self.acronym = acronym.lower()
 
 class Molecule:
-    def __init__(self, id: int, smile: str, is_binded: bool = None, binding_affinity: float = None):
-        self.id = id
+    def __init__(self, molecule_id: int, smile: str, is_binded: bool = None, binding_affinity: float = None):
+        self.molecule_id = molecule_id
         self.smile = smile
         self.is_binded = is_binded
         self.binding_affinity = binding_affinity
@@ -187,7 +187,7 @@ class SMPBindingAffinityModel:
     
     def _preprocess_data(self, molecules: List[Molecule]) -> List[Data]:
 
-        id_list = [molecule.id for molecule in molecules]
+        id_list = [molecule.molecule_id for molecule in molecules]
         smile_list = [molecule.smile for molecule in molecules]
 
         labels_list = []
