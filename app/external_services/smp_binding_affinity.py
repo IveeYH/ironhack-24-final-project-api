@@ -187,7 +187,6 @@ class SMPBindingAffinityModel:
     
     def _preprocess_data(self, molecules: List[Molecule]) -> List[Data]:
 
-        id_list = [molecule.molecule_id for molecule in molecules]
         smile_list = [molecule.smile for molecule in molecules]
 
         labels_list = []
@@ -202,7 +201,7 @@ class SMPBindingAffinityModel:
         for i in range(0, len(smile_list), self.batch_size):
 
             smiles_batch = smile_list[i:i+self.batch_size]
-            molecules_batch = id_list[i:i+self.batch_size]
+            molecules_batch = molecules[i:i+self.batch_size]
             labels_batch = None if labels_list.count(None) == len(labels_list) else labels_list[i:i+self.batch_size]
 
             for index, smile in enumerate(smiles_batch):
@@ -283,7 +282,7 @@ class SMPBindingAffinityModel:
             predicted_molecules[i].binding_affinity = predictions[i]
             predicted_molecules[i].is_binded = True if predictions[i] > binding_threshold else False
 
-        return predictions
+        return predicted_molecules
         
     
     def train(self, protein: Protein, molecules: List[Molecule]) -> None:

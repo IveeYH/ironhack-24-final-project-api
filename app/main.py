@@ -42,17 +42,12 @@ def predict_small_molecule_protein_binding_affinity(protein_code: Protein, molec
 
     print(predicted_molecules)
 
-    print(predicted_molecules[0])
-    print(type(predicted_molecules[0]))
-
-    print(predicted_molecules[0].T)
-
     final_molecules = []
     for molecule in predicted_molecules:
         final_molecules.append(Molecule(
-                id=molecule.molecule.molecule_id, 
-                smile=molecule.molecule.smile,
-                binding_affinity=molecule.molecule.binding_affinity,
-                is_binded=molecule.molecule.is_binded))
+                id=molecule.molecule_id, 
+                smile=molecule.smile,
+                binding_affinity=molecule.binding_affinity,
+                is_binded=molecule.is_binded))
 
     return final_molecules
