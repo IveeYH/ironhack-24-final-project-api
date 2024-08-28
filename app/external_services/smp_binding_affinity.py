@@ -283,7 +283,7 @@ class SMPBindingAffinityModel:
             predicted_molecules[i].binding_affinity = predictions[i]
             predicted_molecules[i].is_binded = True if predictions[i] > binding_threshold else False
 
-        return predicted_molecules
+        return predictions
         
     
     def train(self, protein: Protein, molecules: List[Molecule]) -> None:
