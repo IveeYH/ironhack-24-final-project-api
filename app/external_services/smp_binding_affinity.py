@@ -28,9 +28,9 @@ class Molecule:
         self.is_binded = is_binded
         self.binding_affinity = binding_affinity
 
-class _CustomGNNLayer(MessagePassing):
+class CustomGNNLayer(MessagePassing):
     def __init__(self, in_channels, out_channels):
-        super(_CustomGNNLayer, self).__init__(aggr='max')
+        super(CustomGNNLayer, self).__init__(aggr='max')
         self.lin = nn.Linear(in_channels + 6, out_channels)
 
     def forward(self, x, edge_index, edge_attr):
@@ -45,11 +45,11 @@ class _CustomGNNLayer(MessagePassing):
         return self.lin(aggr_out)
 
 
-class _GNNModel(nn.Module):
+class GNNModel(nn.Module):
     def __init__(self, input_dim, hidden_dim, num_layers, dropout_rate):
-        super(_GNNModel, self).__init__()
+        super(GNNModel, self).__init__()
         self.num_layers = num_layers
-        self.convs = nn.ModuleList([_CustomGNNLayer(input_dim if i == 0 else hidden_dim, hidden_dim) for i in range(num_layers)])
+        self.convs = nn.ModuleList([CustomGNNLayer(input_dim if i == 0 else hidden_dim, hidden_dim) for i in range(num_layers)])
         self.dropout = nn.Dropout(dropout_rate)
         self.bns = nn.ModuleList([nn.BatchNorm1d(hidden_dim) for _ in range(num_layers)])
         self.lin = nn.Linear(hidden_dim, 1)
@@ -317,7 +317,7 @@ class SMPBindingAffinityModel:
         train_input_dim = train_loader.dataset[0].num_node_features
 
         log.info('Preprocess finished. Starting training...')
-        model = _GNNModel(train_input_dim, self.train_hidden_dim, self.train_num_layers, self.train_dropout_rate)
+        model = GNNModel(train_input_dim, self.train_hidden_dim, self.train_num_layers, self.train_dropout_rate)
         optimizer = optim.AdamW(model.parameters(), lr=self.train_learning_rate)
         criterion = BCEWithLogitsLoss()
 
