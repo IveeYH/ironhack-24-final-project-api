@@ -32,16 +32,11 @@ jobs:
           docker build -t "${{ vars.GCP_REGION_DEFAULT }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_REGISTRY_REPOSITORY_NAME }}/${{ vars.GCP_REGISTRY_IMAGE_NAME }}:${{ github.sha }}" ./
           docker push "${{ vars.GCP_REGION_DEFAULT }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_REGISTRY_REPOSITORY_NAME }}/${{ vars.GCP_REGISTRY_IMAGE_NAME }}:${{ github.sha }}"
 
-      # Decode the Base64 encoded GCP_SA_KEY
-      - name: Decode GCP_SA_KEY
-        id: decode-key
-        run: echo "${{ secrets.GCP_SA_KEY }}" | base64 --decode > /tmp/gcp-key.json
-
-      # Authenticate with Google Cloud to deploy to Cloud Run
+      # Authenticate with Google Cloud to deploy to Cloud Run using the Base64-encoded key
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v1
         with:
-          credentials_json: /tmp/gcp-key.json
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
 
       - name: Deploy to Cloud Run
         run: |-
