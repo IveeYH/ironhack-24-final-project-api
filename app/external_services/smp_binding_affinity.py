@@ -253,8 +253,6 @@ class SMPBindingAffinityModel:
         log.info(f"Model downloaded from GCS at gs://{self.gcs_bucket_name}/{self.gcs_model_path}")
 
     def predict(self, protein: Protein, molecules: List[Molecule], custom_binding_threshold: float = None) -> List[Molecule]:
-
-        torch.serialization.register_
         
         # Load the model from GCS
         model_path = f'{protein.acronym}_model.pt'
