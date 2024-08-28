@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
       
 jobs:
-  deploy:
+  deploy_to_artifact_registry:
     # Add 'id-token' with the intended permissions for workload identity federation
     permissions:
       contents: 'read'
@@ -33,6 +33,15 @@ jobs:
           docker build -t "${{ vars.GCP_REGION_DEFAULT }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_REGISTRY_REPOSITORY_NAME }}/${{ vars.GCP_REGISTRY_IMAGE_NAME }}:${{ github.sha }}" ./
           docker push "${{ vars.GCP_REGION_DEFAULT }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_REGISTRY_REPOSITORY_NAME }}/${{ vars.GCP_REGISTRY_IMAGE_NAME }}:${{ github.sha }}"
 
+  deploy_to_cloud_run:
+    # Add 'id-token' with the intended permissions for workload identity federation
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
       # Authenticate with Google Cloud to deploy to Cloud Run using the Base64-encoded key
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v1
