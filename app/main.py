@@ -2,7 +2,6 @@ from enum import Enum
 from typing import List
 from fastapi import FastAPI
 from pydantic import BaseModel
-from app.smp_binding_affinity import model as smpba_model, datatypes
 import os
 
 GCS_BUCKET_NAME = os.getenv("GCS_BUCKET_NAME")
@@ -27,6 +26,7 @@ def test_api_connection():
 
 @app.post("/predict")
 def predict_small_molecule_protein_binding_affinity(protein_code: Protein, molecules: List[Molecule]) -> List[Molecule]:
+    from app.smp_binding_affinity import model as smpba_model, datatypes
 
     model_molecules = [datatypes.Molecule(id=molecule.id, smile=molecule.smile) for molecule in molecules]
     model_protein = datatypes.Protein(acronym=protein_code.value)
