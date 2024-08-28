@@ -24,10 +24,10 @@ jobs:
         uses: 'docker/login-action@v3'
         with:
           registry: '${{ vars.GCP_REGION_DEFAULT }}-docker.pkg.dev'
-          username: _json_key
-          password: ${{ secrets.GCP_CREDENTIALS }}
+          username: _json_key_base64
+          password: ${{ secrets.GCP_ARTIFACT_SA_KEY }}
 
       - name: Build and Push Container
         run: |-
-          docker build -t "${{ vars.GCP_REGION_DEFAULT }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_REGISTRY_REPOSITORY_NAME }}/${{ vars.GCP_REGISTRY_IMAGE_NAME }}:latest" ./
+          docker build --build-arg -t "${{ vars.GCP_REGION_DEFAULT }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_REGISTRY_REPOSITORY_NAME }}/${{ vars.GCP_REGISTRY_IMAGE_NAME }}:latest" ./
           docker push "${{ vars.GCP_REGION_DEFAULT }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_REGISTRY_REPOSITORY_NAME }}/${{ vars.GCP_REGISTRY_IMAGE_NAME }}:latest"
