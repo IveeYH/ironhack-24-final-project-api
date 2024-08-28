@@ -21,9 +21,9 @@ class Protein(str, Enum):
     brd4 = 'BRD4'
     hsa = 'HSA'
 
-@app.get("/test")
+@app.get("/status")
 def test_api_connection():
-    return {"version": "0.0.1-rc.1"}
+    return {"status": "successful"}
 
 @app.post("/predict/{protein_code}")
 def predict_small_molecule_protein_binding_affinity(protein_code: Protein, molecules: List[Molecule]) -> List[Molecule]:

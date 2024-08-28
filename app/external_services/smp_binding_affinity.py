@@ -254,7 +254,7 @@ class SMPBindingAffinityModel:
         # Load the model from GCS
         model_path = f'{protein.acronym}_model.pt'
         self._download_model_from_gcs(model_path)
-        model = _GNNModel()
+        model = _GNNModel(train_input_dim, self.train_hidden_dim, self.train_num_layers, self.train_dropout_rate)
         model.load_state_dict(torch.load(model_path))
 
         binding_threshold = self.binding_threshold
