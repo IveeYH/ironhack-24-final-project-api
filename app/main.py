@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import List
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from app.external_services.smp_binding_affinity import SMPBindingAffinityModel as Model, Molecule as ModelMolecule, Protein as ModelProtein
 import os
@@ -9,6 +10,15 @@ GCS_BUCKET_NAME = os.getenv("GCS_BUCKET_NAME")
 GCS_MODEL_PATH = os.getenv("GCS_MODEL_PATH")
 
 app = FastAPI()
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins, change this to specific domains in production
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all HTTP methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 class Molecule(BaseModel):
     id: int
