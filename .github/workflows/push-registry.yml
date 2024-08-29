@@ -28,15 +28,6 @@ jobs:
           username: _json_key_base64
           password: ${{ secrets.GCP_SA_KEY }}
 
-      - name: Pull the Latest Image
-        run: |-
-          docker pull "${{ vars.GCP_REGION_DEFAULT }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_REGISTRY_REPOSITORY_NAME }}/${{ vars.GCP_REGISTRY_IMAGE_NAME }}:latest" || true
-
-      - name: Remove the Latest Tag
-        run: |-
-          docker tag "${{ vars.GCP_REGION_DEFAULT }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_REGISTRY_REPOSITORY_NAME }}/${{ vars.GCP_REGISTRY_IMAGE_NAME }}:latest" "${{ vars.GCP_REGISTRY_IMAGE_NAME }}:temp"
-          docker rmi "${{ vars.GCP_REGION_DEFAULT }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_REGISTRY_REPOSITORY_NAME }}/${{ vars.GCP_REGISTRY_IMAGE_NAME }}:latest"
-
       - name: Build and Tag New Image
         run: |-
           docker build -t "${{ vars.GCP_REGION_DEFAULT }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_REGISTRY_REPOSITORY_NAME }}/${{ vars.GCP_REGISTRY_IMAGE_NAME }}:${{ github.sha }}" ./
