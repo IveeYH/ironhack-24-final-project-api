@@ -22,7 +22,7 @@ app.add_middleware(
 
 class Molecule(BaseModel):
     id: int
-    smile: str
+    smiles: str
     is_binded: bool = None
     binding_affinity: float = None
 
@@ -37,7 +37,7 @@ def test_api_connection():
 
 @app.post("/predict/{protein_code}")
 def predict_small_molecule_protein_binding_affinity(protein_code: Protein, molecules: List[Molecule]) -> List[Molecule]:
-    model_molecules = [ModelMolecule(molecule_id=molecule.id, smile=molecule.smile) for molecule in molecules]
+    model_molecules = [ModelMolecule(molecule_id=molecule.id, smile=molecule.smiles) for molecule in molecules]
     model_protein = ModelProtein(acronym=protein_code.value)
 
     model = Model(
@@ -56,7 +56,7 @@ def predict_small_molecule_protein_binding_affinity(protein_code: Protein, molec
     for molecule in predicted_molecules:
         final_molecules.append(Molecule(
                 id=molecule.molecule_id, 
-                smile=molecule.smile,
+                smiles=molecule.smile,
                 binding_affinity=molecule.binding_affinity,
                 is_binded=molecule.is_binded))
 
