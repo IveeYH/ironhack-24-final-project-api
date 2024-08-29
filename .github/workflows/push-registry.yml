@@ -3,9 +3,8 @@ name: Deploy API
 on:
   push:
     branches:
-      - main
-  workflow_dispatch:
-      
+      - dev
+      - pro
 jobs:
   deploy_to_artifact_registry:
     # Add 'id-token' with the intended permissions for workload identity federation
@@ -14,7 +13,7 @@ jobs:
       id-token: 'write'
 
     runs-on: ubuntu-latest
-    environment: dev
+    environment: ${{ github.ref_name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -45,7 +44,7 @@ jobs:
       id-token: 'write'
 
     runs-on: ubuntu-latest
-    environment: dev
+    environment: ${{ github.ref_name }}
     steps:
       # Authenticate with Google Cloud to deploy to Cloud Run using the Base64-encoded key
       - name: Authenticate to Google Cloud
